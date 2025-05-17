@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,7 +33,7 @@ import com.github.actions.model.Todo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Details(modifier: Modifier = Modifier, todo: Todo,navController: NavController) {
+fun Details(todo: Todo,navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -41,12 +42,13 @@ fun Details(modifier: Modifier = Modifier, todo: Todo,navController: NavControll
                     modifier = Modifier.padding(top = 4.dp))},
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back",
+                            tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary),
-                windowInsets = WindowInsets(10.dp)
+//                windowInsets = WindowInsets(10.dp)
             )
         }
     ) { paddingValues ->
@@ -68,7 +70,7 @@ fun Details(modifier: Modifier = Modifier, todo: Todo,navController: NavControll
                     verticalAlignment = Alignment.CenterVertically,
 //                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(todo.title,
+                    Text("Task: ${todo.title}",
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(1f),
                         color = Color.White,
@@ -97,11 +99,20 @@ fun Details(modifier: Modifier = Modifier, todo: Todo,navController: NavControll
                         .background(color = MaterialTheme.colorScheme.background)
                         .padding(16.dp),
                 ) {
-                    Column(modifier
+                    Column(modifier = Modifier
                         .background(color = MaterialTheme.colorScheme.background)){
+                        Row() {
+                            Text("UserID: ${todo.userId}",
+                                modifier = Modifier.weight(1f))
+                            Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                            Text("Task-ID: ${todo.id}",
+                                modifier = Modifier.weight(1f))}
+
+                        Spacer(modifier = Modifier.padding(4.dp))
                         Text("Status: ${if (todo.completed) "Completed" else "Ongoing"}",
                             style = MaterialTheme.typography.bodyMedium)
-                        Spacer(modifier.padding(4.dp))
+                        Spacer(modifier = Modifier.padding(4.dp))
+
                         Text(
                             "Description",
                             style = MaterialTheme.typography.titleSmall,

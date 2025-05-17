@@ -23,7 +23,7 @@ import com.github.actions.ui.screens.TodoUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToDoApp(modifier: Modifier = Modifier, navController: NavController) {
+fun ToDoApp(navController: NavController) {
     val todoViewModel: TodoViewModel = viewModel()
     val uiState = todoViewModel.uiState
 
@@ -39,7 +39,6 @@ fun ToDoApp(modifier: Modifier = Modifier, navController: NavController) {
             )
         }
     ) { paddingValues ->
-
         when(uiState){
             is TodoUiState.Loading -> {
                 Column(
@@ -77,7 +76,9 @@ fun ToDoApp(modifier: Modifier = Modifier, navController: NavController) {
                 .fillMaxSize()
         ) {
             items(uiState.todos.size) { index ->
-                ToDoItem(todo = uiState.todos[index], onClick = {
+                ToDoItem(
+                    todo = uiState.todos[index],
+                    onClick = {
                     navController.navigate(
                         "details/${uiState.todos[index].userId}/${uiState.todos[index].id}/${uiState.todos[index].title}/${uiState.todos[index].completed}"
                     )

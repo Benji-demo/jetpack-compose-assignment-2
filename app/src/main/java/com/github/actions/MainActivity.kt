@@ -16,8 +16,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ActionsTheme {
                 val navController = rememberNavController()
-                AppNavGraph()
-                    ToDoApp(modifier = Modifier, navController = navController )
+                AppNavGraph(navController = navController)
+//                    ToDoApp(navController = navController )
             }
         }
     }
