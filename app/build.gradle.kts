@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp") version "2.0.21-1.0.27"
+    id("com.google.dagger.hilt.android") version "2.51" apply false
+    id("kotlin-kapt")
 }
 
 android {
@@ -39,6 +42,7 @@ android {
     buildFeatures {
         compose = true
     }
+    sourceSets["main"].java.srcDirs("build/generated/ksp/main/kotlin")
 }
 
 dependencies {
@@ -49,6 +53,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.navigation:navigation-compose:2.7.3")
+
+    implementation ("androidx.room:room-runtime:2.7.1")
+    implementation ("androidx.room:room-ktx:2.7.1")
+    kapt("androidx.room:room-compiler:2.7.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

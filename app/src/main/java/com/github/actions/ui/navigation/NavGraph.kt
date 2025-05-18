@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.github.actions.ToDoApp
-import com.github.actions.model.Todo
+import com.github.actions.data.model.Todo
 import com.github.actions.ui.screens.Details
 
 @Composable

@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.actions.model.Todo
-import com.github.actions.network.TodoApi
+import com.github.actions.data.model.Todo
+import com.github.actions.data.repository.TodoRepository
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 
 sealed interface TodoUiState {
     data class Success(val todos: List<Todo>) : TodoUiState
@@ -16,26 +16,32 @@ sealed interface TodoUiState {
     object Loading : TodoUiState
 }
 
-class TodoViewModel : ViewModel() {
-    /** The mutable State that stores the status of the most recent request */
+class TodoViewModel(
+    private val repository: TodoRepository) : ViewModel() {
     var uiState by mutableStateOf<TodoUiState>(TodoUiState.Loading)
+        private set
+    var isRefreshing by mutableStateOf(false)
         private set
 //    var todoState by mutableStateOf<Todo?>(null)
 
     init {
         getTodoList()
     }
-
+    fun refreshTodos() {
+        viewModelScope.launch {
+            isRefreshing = true
+            getTodoList()
+            isRefreshing = false
+        }
+    }
     private fun getTodoList() {
         viewModelScope.launch {
-            uiState = TodoUiState.Loading
-            uiState = try {
-                val listResult = TodoApi.retrofitService.getTodos()
-                TodoUiState.Success(listResult)
-//                println("Fetched Todos: $listResult")
-//            todoState =listResult
-            } catch (e: Exception) {
-                TodoUiState.Error(e.localizedMessage ?: "Unknown error")
+            repository.getTodos().collectLatest { todos ->
+                uiState = if (todos.isNotEmpty()) {
+                    TodoUiState.Success(todos)
+                } else {
+                    TodoUiState.Error("No saved data available")
+                }
             }
         }
     }

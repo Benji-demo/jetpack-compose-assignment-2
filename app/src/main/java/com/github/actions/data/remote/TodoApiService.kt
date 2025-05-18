@@ -1,6 +1,6 @@
-package com.github.actions.network
+package com.github.actions.data.remote
 
-import com.github.actions.model.Todo
+import com.github.actions.data.model.Todo
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
